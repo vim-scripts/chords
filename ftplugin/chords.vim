@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:     (Guitar) chords and tabs
 " Maintainer:   Roman Cheplyaka <roma@ro-che.info>
-" Last Change:  2007 Dec 29
+" Last Change:  2007 Dec 30
 " NOTE:
 " The following variables control syntax hiliting:
 "
@@ -42,7 +42,7 @@ set iskeyword+=#
 
 let s:suffix_regexp = "[+b\\#m[:digit:]]|maj|sus"
 let  s:chord_regexp = "<[A-H](" . s:suffix_regexp . ")*>"
-let    s:tab_regexp = "^.*([A-H][\\#b]|\\d)?\\s*\\|[[:digit:]~-]+\\|.*$"
+let    s:tab_regexp = "^.*\\|.*$"
 
 if b:chords_enable
 	if b:chords_linewise
@@ -53,7 +53,13 @@ if b:chords_enable
 	highlight link chord keyword
 endif
 if b:tabs_enable
-	execute "syntax match tab /\\v". s:tab_regexp ."/"
-	highlight link tab   comment
+	execute "syntax match tab_line /\\v". s:tab_regexp ."/ contains=tab"
+	syntax match tab /\v\|.*\|/ contained contains=tab_elem,tab_delim
+	syntax match tab_elem /[^-|]/ contained
+	syntax match tab_delim /|/ contained
+	highlight link tab_line comment
+	highlight link tab comment
+	highlight link tab_elem string
+	highlight link tab_delim special
 endif
 
